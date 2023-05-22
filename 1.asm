@@ -1,4 +1,4 @@
-.model small       ;version 103
+.model small       ;version 104
 .stack 100h
 .data
     message db 'Write the length of the base of the triangle: $'
