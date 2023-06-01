@@ -1,4 +1,4 @@
-.model small ; version 106
+.model small ; version 106 ; finish validation; finish readme. ; must start header.
 .stack 100h
 .data
     message2 db 'start words... $'
