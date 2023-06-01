@@ -14,9 +14,9 @@
 ### הפעולות שהמשתמש יכול לבצע:
 על המשתמש להכניס מספר לבסיס המשולש, מספר לגובה המשולש - והתוכנה תצייר לו שעון חול מותאם אישית לפי מידותיו. 
 ### דוגמאות ריצה:
-![image](https://github.com/baraksu/SandClock/assets/133051576/4c030248-26c7-4989-a698-cd24a25856ff)
+![image](https://github.com/baraksu/SandClock/assets/133051576/ee303543-c6b2-4b4a-add1-87b6cea49c7f)
 
-![image](https://github.com/baraksu/SandClock/assets/133051576/ac2745aa-1c2f-4b7c-8c55-ad6a4f4197cb)
+![image](https://github.com/baraksu/SandClock/assets/133051576/a47cc60b-7bd6-4c0e-a46d-9c71b71f321c)
 
 ![image](https://github.com/baraksu/SandClock/assets/133051576/3d92d065-d9cd-4986-aa00-31895bb9d92d)
 
