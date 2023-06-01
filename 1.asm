@@ -1,21 +1,39 @@
-.model small       ;version 104
+.model small ; version 106
 .stack 100h
 .data
-    message db 'Write the length of the base of the triangle: $'
-    message1 db 'Write the length of the height of the triangle: $'
+    message2 db 'start words... $'
+    message db '                              Write the length of the base of the triangle: $'
+    message1 db '                               Write the length of the height of the triangle: $'
     base dw ?
     height dw ?
     hecal dw ?
     bacal dw ?
     hecal1 dw ?
     ans dw ?
+    pow_val dw ?
+    base_pow dw ?
+    height_pow dw ?
+    height_pow_deg dw ?
+    height_pow_2 dw ?
+    other dw ?
+    re dw ?
+    cheight dw ?
+    base10r dw ?
+    height10u dw ?
 .code       
-
-
-
     mov ax, @data
     mov ds, ax
-
+ 
+ 
+    
+      start:
+    ; mevakesh et habasis
+    mov ah, 09h
+    lea dx, message2
+    int 21h
+    
+ 
+ 
     ; mevakesh et habasis
     mov ah, 09h
     lea dx, message
@@ -27,7 +45,7 @@
     sub al, 30h ; memir mispar le-aski
     mov bl, al ; shomer et hakelet be - bl
     mov ah, 00h ; Clear AH
-    mov al, 0ah ; Use 0ah as the multiplier
+    mov al, 10 ; multiply by 10
     mul bl ; machpil et BL by 10
     mov base, ax ; shomer et hatotzaa be-base
 
@@ -42,11 +60,81 @@
     sub al, 30h ; memir mispar le-aski
     mov bl, al ; shomer et hakelet be - bl
     mov ah, 00h ; Clear AH
-    mov al, 0ah ; Use 0ah as the multiplier
+    mov al, 10 ; multiply by 10
     mul bl ; machpil et BL by 10
     mov height, ax ; shomer et hatotzaa be-base
+    
+    
+    
+    
+   ; xor ax, ax
+ 
+    
+    ; Compare base and height
+    ;mov ax, base
+    ;cmp 0, ax
 
-    ; Set video mode
+    ; Jump back to start if base > height
+     ;jg start
+     ;jmp exit2
+
+;call_note: 
+ ;   call note
+    
+    
+
+;exit2:
+   
+    xor ax, ax
+    mov ax, height
+    mov cheight, ax
+    
+    
+    
+;mov ax, cheight   ; Move the dividend value to AX
+;cwd                ; Sign-extend AX into DX:AX for signed division
+
+;mov bx, base    ; Move the divisor value to BX
+;div bx             ; Divide DX:AX by BX (quotient in AX, remainder in DX)
+;mov ans, ax 
+    
+
+   ;devide by 10 height             
+mov ax, height     ; Move the value of height to AX
+mov dx, 0          ; Clear DX to prepare for division
+mov bx, 10         ; Move the divisor (10) to BX
+
+div bx             ; Divide DX:AX by BX (result in AX, remainder in DX)
+
+mov height10u, ax     ; Move the quotient back to height
+               
+
+ 
+ 
+ 
+   ;devide by 10 base             
+mov ax, base     ; Move the value of height to AX
+mov dx, 0          ; Clear DX to prepare for division
+mov bx, 10         ; Move the divisor (10) to BX
+
+div bx             ; Divide DX:AX by BX (result in AX, remainder in DX)
+
+mov base10r, ax     ; Move the quotient back to height
+
+
+
+ 
+    
+    
+     ;xor ax, ax 
+     ;shr height, 1
+     ;mov ax, height
+     ;mov re, ax    
+                
+                   
+                   
+    
+     ; Set video mode
     mov ah, 00h
     mov al, 13h
     int 10h
@@ -55,112 +143,154 @@
     mov ah, 0ch   ; Set pixel color and position
     mov al, 10    ; Blue color
 
-; metzayer et habasis
-mov cx, base       ; orech shel habasis
-mov dx, 80         ; nekudat ha-y
-mov ax, 30         ; nekudat ha-x
+    ; metzayer et habasis
+    mov bx, 0         ; Start with zero length
+    mov bx, base
+    mov dx, 100        ; nekudat ha-y
+    mov cx, 30        ; nekudat ha-x
+    
+    call draw_base 
+    
+ 
+   ; Calculate the y-coordinate for the right line based on the current value of cx
+    mov si, 100                  ; Store the current value of cx in si
+    mov cx, cheight                ; Subtract the base length from cx
+    sub si, cx
+    mov other, si 
+    
+   
+     
+     
+    ; metzayer et habasis
+    mov bx, 0         ; Start with zero length
+    mov bx, base
+    mov dx, other        ; nekudat ha-y
+    mov cx, 30        ; nekudat ha-x 
+    
+    
+     call draw_base
+     
+     
+      
+      
+      
 
-draw_base:
-    mov bh, 0       ; Page number
+ 
+
+      
+      
+      
+     mov dx, 100 
+      
+      
+      
+      
+          ; Draw the left line of the triangle
+    mov cx, 30                    ; Set x-coordinate to 30
+    mov bx, 10                ; Set height of triangle
+          
+          
+          
+    call draw_left_line
+    
+ 
+    
+       ; Calculate the x-coordinate for the right line based on the current value of cx
+    mov si, 30                  ; Store the current value of cx in si
+    mov cx, base                ; Subtract the base length from cx
+    add cx, si                  ; Add the base length back to cx
+
+    ; Draw the right line of the triangle
+    mov dx, 100                  ; Calculate y-coordinate for the right line
+    mov bx, 10               ; Set height of triangle 
+    
+    call draw_right_line 
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+     
+     
+     
+     exit:
+mov ax, 4c00h
+int 21H     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    
+ 
+ 
+ 
+
+;note proc
+   
+ ;   mov ah, 09h
+  ;  lea dx, message3
+   ; int 21h
+    ;jmp start    
+;ret
+;note endp     
+ 
+ 
+ 
+ 
+;bx: line lenght
+;cx: x cord
+;dx: y cord
+draw_base proc
+    
+next_pixel:    
     mov al, 10      ; Blue color
     mov ah, 0ch     ; Set pixel color and position
     int 10h         ; Plot pixel
 
-    inc ax          ; Move right one pixel
-    dec cx          ; Decrease length by 1 pixel
-    jnz draw_base   ; Repeat until cx (length) is zero
-
-    mov ax, height    ; Move the value from height to AX
-    mov hecal, ax     ; Copy the value from AX to hecal
-    mov ax, base    ; Move the value from height to AX
-    mov bacal, ax     ; Copy the value from AX to hecal
-    shl hecal, 1 ; Multiply height by 2
-    mov ax, hecal    ; Move the value from height to AX
-    mov hecal1, ax     ; Copy the value from AX to hecal
-    shr bacal, 1 ; divide height by 2    
-    shl bacal, 1 ; Multiply base by 2 
-    mov ax, hecal      ; Move the value of hecal to AX
-    add ax, bacal      ; Add the value of bacal to AX
-    mov hecal, ax      ; Copy the result from AX back to hecal
+    ;inc ax          ; Move right one pixel
+    inc cx          ; Increase length by 1 pixel
     
+    dec bx
+    cmp bx, 0
+    jne next_pixel
     
-    
-    
-...
-    ; Calculate the square root of hecal using Newton's method
-    mov ax, hecal          ; Move the value of hecal to AX
-
-    ; Set an initial guess for the square root
-    mov bx, ax             ; Copy the value to BX
-    shr bx, 1              ; Divide BX by 2 (right shift)
-
-    ; Iterate to refine the square root approximation
-    sqrt_iteration:
-        mov cx, ax         ; Copy the original value to CX
-        xor dx, dx         ; Clear DX
-        div bx             ; Divide CX by BX (AX = CX / BX)
-
-        ; Average the quotient and divisor to improve the approximation
-        add ax, bx         ; Add BX to AX
-        shr ax, 1          ; Divide AX by 2 (right shift)
-
-        ; Check if the approximation is satisfactory
-        cmp bx, ax         ; Compare BX and AX
-        jae sqrt_done      ; Jump if approximation is satisfactory
-
-        ; Update BX with the new approximation
-        mov bx, ax         ; Copy the new approximation to BX
-        jmp sqrt_iteration ; Repeat the iteration
-
-    sqrt_done:
-    mov hecal, ax          ; Store the square root result back to hecal
-
-    ; Now hecal contains the square root of its original value
-
-  ...    
-  
-      
-      
-      
-  
-    mov ax, hecal1      ; Move the value of hecal to AX
-    cwd                ; Sign-extend AX into DX:AX for signed division
-
-    mov bx, base       ; Move the value of base to BX
-    idiv bx            ; Divide DX:AX by BX (result in AX, remainder in DX)  
-    mov ans, ax
-    
-  
-  
-  
-  
+    ret             
+draw_base endp
+;drawing 
 
 
-    ; Draw the left line of the triangle
-    mov cx, 30                    ; Set x-coordinate to 30
-    mov bx, hecal                 ; Set height of triangle
-    draw_left_line:
-        inc cx       ; Move right one pixel
-        sub dx, ans       ; Move up one pixel
+
+
+
+
+
+
+
+
+draw_left_line proc
+draw_left_line_lab:
+        add cx, base10r        ; Move right one pixel
+        sub dx, height10u       ; Move up one pixel
+        int 10h      ; Plot pixel                                         
+        dec bx       ; Decrease height by 1 pixel
+        jnz draw_left_line_lab ; Jump if height is not zero
+        
+        ret   
+draw_left_line endp
+
+
+
+draw_right_line proc
+draw_right_line_lab:    
+        sub cx, base10r       ; Move left one pixel 
+        sub dx, height10u       ; Move up one pixel
         int 10h      ; Plot pixel
         dec bx       ; Decrease height by 1 pixel
-        jnz draw_left_line ; Jump if height is not zero
+        jnz draw_right_line_lab ; Jump if height is not zero
 
-   ; Calculate the x-coordinate for the right line based on the current value of cx
-mov si, cx                  ; Store the current value of cx in si
-sub cx, base                ; Subtract the base length from cx
-add cx, si                  ; Add the base length back to cx
-
-    ; Draw the right line of the triangle
-    mov dx, 80                  ; Calculate y-coordinate for the right line
-    mov bx, hecal               ; Set height of triangle
-    draw_right_line:
-        dec cx       ; Move left one pixel 
-        sub dx, ans       ; Move up one pixel
-        int 10h      ; Plot pixel
-        dec bx       ; Decrease height by 1 pixel
-        jnz draw_right_line ; Jump if height is not zero
-
-
+        ret         
+draw_right_line endp
 
 end
