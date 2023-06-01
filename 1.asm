@@ -1,242 +1,229 @@
-.model small ; version 106 ; finish validation; finish readme. ; must start header.
+.model small ; version 107 
 .stack 100h
 .data
-    message2 db 'start words... $'
-    message db '                              Write the length of the base of the triangle: $'
+message2 db '                                      _      _         _   ',13,10,  
+    db '                     ___ __ _ _ _  __| |  __| |___  __| |__',13,10,
+    db '                    (_-</ _, | , \/ _` | / _| / _ \/ _| / /',13,10,
+    db '                    /__/\__,_|_||_\__,_| \__|_\___/\__|_\_\',13,10,'$'
+
+    message5 db '                               write 1-10 number: $'
+    message db '                                Write the length of the base of the triangle: $'
     message1 db '                               Write the length of the height of the triangle: $'
+    message3 db '                               the base value cant be 0! try again $'
+    message4 db '                               the height value cant be 0! try again $'
     base dw ?
     height dw ?
-    hecal dw ?
-    bacal dw ?
-    hecal1 dw ?
-    ans dw ?
-    pow_val dw ?
-    base_pow dw ?
-    height_pow dw ?
-    height_pow_deg dw ?
-    height_pow_2 dw ?
-    other dw ?
-    re dw ?
+    ycord2 dw ?
     cheight dw ?
     base10r dw ?
     height10u dw ?
+   
 .code       
     mov ax, @data
     mov ds, ax
  
  
-    
-      start:
-    ; mevakesh et habasis
-    mov ah, 09h
-    lea dx, message2
-    int 21h
-    
  
- 
-    ; mevakesh et habasis
-    mov ah, 09h
-    lea dx, message
-    int 21h
-
-    ; kore et hakelet
-    mov ah, 01h
-    int 21h
-    sub al, 30h ; memir mispar le-aski
-    mov bl, al ; shomer et hakelet be - bl
-    mov ah, 00h ; Clear AH
-    mov al, 10 ; multiply by 10
-    mul bl ; machpil et BL by 10
-    mov base, ax ; shomer et hatotzaa be-base
-
-    ; mevakesh et hagova
-    mov ah, 09h
-    lea dx, message1
-    int 21h
-
-    ; kore et hakelet
-    mov ah, 01h
-    int 21h
-    sub al, 30h ; memir mispar le-aski
-    mov bl, al ; shomer et hakelet be - bl
-    mov ah, 00h ; Clear AH
-    mov al, 10 ; multiply by 10
-    mul bl ; machpil et BL by 10
-    mov height, ax ; shomer et hatotzaa be-base
+   ; hodada 1
+    mov ah, 09h         ; Set the function code for printing a string
+    lea dx, message2    ; Load the offset of the message2 string into DX
+    int 21h             ; Call the interrupt to display the message2 string
     
     
     
-    
-   ; xor ax, ax
- 
-    
-    ; Compare base and height
-    ;mov ax, base
-    ;cmp 0, ax
-
-    ; Jump back to start if base > height
-     ;jg start
-     ;jmp exit2
-
-;call_note: 
- ;   call note
+    ;hodada 2
+    mov ah, 09h         ; Set the function code for printing a string
+    lea dx, message5    ; Load the offset of the message5 string into DX
+    int 21h             ; Call the interrupt to display the message2 string
     
     
 
-;exit2:
+start:
+    ; mevakesh et habasis (Asks for the base)
+    mov ah, 09h      ; Set the function code for printing a string
+    lea dx, message   ; Load the offset of the message string into DX
+    int 21h           ; Call the interrupt to display the message string
+
+    ; kore et hakelet (Reads the input character)
+    mov ah, 01h      ; Set the function code for reading a character
+    int 21h          ; Call the interrupt to read a character from the keyboard
+    sub al, 30h      ; Subtract 30h to convert the ASCII digit to a numerical value
+    mov bl, al       ; Move the numerical value to BL for further processing
+    mov ah, 00h      ; Clear AH
+    mov al, 10       ; Set AL to 10 for multiplication
+    mul bl           ; Multiply BL by 10, result in AX
+    mov base, ax     ; Store the multiplied value in the base variable
+
+    ; mevakesh et hagova (Asks for the height)
+    mov ah, 09h      ; Set the function code for printing a string
+    lea dx, message1  ; Load the offset of the message1 string into DX
+    int 21h           ; Call the interrupt to display the message1 string
+
+    ; kore et hakelet (Reads the input character)
+    mov ah, 01h      ; Set the function code for reading a character
+    int 21h          ; Call the interrupt to read a character from the keyboard
+    sub al, 30h      ; Subtract 30h to convert the ASCII digit to a numerical value
+    mov bl, al       ; Move the numerical value to BL for further processing
+    mov ah, 00h      ; Clear AH
+    mov al, 10       ; Set AL to 10 for multiplication
+    mul bl           ; Multiply BL by 10, result in AX
+    mov height, ax   ; Store the multiplied value in the height variable
+
+
+
+    ;shgiat 0
+    xor ax, ax       ; menake et ax
+    mov ax, base     ; machnis le-ax et base 
+    cmp ax, 0        ; mashve le-0
+    jle note1ca      ; holech le-label le-note1ca, less or equal
+    
+    ;shgiat 0
+    xor ax, ax       ; menake et ax
+    mov ax, height   ; machnis le-ax et height
+    cmp ax, 0        ; mashve le-0
+    jle note2ca      ; holech le-label le-note1ca
+
+; Continue with the rest of the code if base > 0 and height > 0
+
+    jmp exit2
+
+note1ca:
+call note1 
    
-    xor ax, ax
-    mov ax, height
-    mov cheight, ax
+
+note2ca:
+call note2
+    
+
+
+
+exit2:
+    ;in order to save original height
+    xor ax, ax       ; menke et ax
+    mov ax, height   ; machnis le-ax et height
+    mov cheight, ax  ; machnis le-cheight et ax
     
     
     
-;mov ax, cheight   ; Move the dividend value to AX
-;cwd                ; Sign-extend AX into DX:AX for signed division
-
-;mov bx, base    ; Move the divisor value to BX
-;div bx             ; Divide DX:AX by BX (quotient in AX, remainder in DX)
-;mov ans, ax 
-    
-
-   ;devide by 10 height             
-mov ax, height     ; Move the value of height to AX
-mov dx, 0          ; Clear DX to prepare for division
-mov bx, 10         ; Move the divisor (10) to BX
-
-div bx             ; Divide DX:AX by BX (result in AX, remainder in DX)
-
-mov height10u, ax     ; Move the quotient back to height
+   ;devide height by 10              
+    mov ax, height     ; Move the value of height to AX
+    mov dx, 0          ; Clear DX to prepare for division
+    mov bx, 10         ; Move the divisor (10) to BX
+    div bx             ; Divide DX:AX by BX (result in AX, remainder in DX)
+    mov height10u, ax  ; Move the quotient back to height10u
                
 
  
- 
- 
-   ;devide by 10 base             
-mov ax, base     ; Move the value of height to AX
-mov dx, 0          ; Clear DX to prepare for division
-mov bx, 10         ; Move the divisor (10) to BX
-
-div bx             ; Divide DX:AX by BX (result in AX, remainder in DX)
-
-mov base10r, ax     ; Move the quotient back to height
+   ;devide base by 10              
+    mov ax, base       ; Move the value of height to AX
+    mov dx, 0          ; Clear DX to prepare for division
+    mov bx, 10         ; Move the divisor (10) to BX
+    div bx             ; Divide DX:AX by BX (result in AX, remainder in DX)
+    mov base10r, ax    ; Move the quotient back to base10r
 
 
-
- 
+       
+       
+       
+                         
+    ; Set video mode
+    mov ah, 00h        ; Video function: Set video mode
+    mov al, 13h        ; Video mode: Mode 13h (320x200, 256-color graphics)
+    int 10h            ; Trigger software interrupt to set video mode
     
     
-     ;xor ax, ax 
-     ;shr height, 1
-     ;mov ax, height
-     ;mov re, ax    
-                
-                   
-                   
-    
-     ; Set video mode
-    mov ah, 00h
-    mov al, 13h
-    int 10h
-
     ; hagdarot rishoniot
-    mov ah, 0ch   ; Set pixel color and position
-    mov al, 10    ; Blue color
-
+    mov ah, 0ch        ; Set pixel color and position
+    mov al, 10         ; green color
+    
+    
     ; metzayer et habasis
     mov bx, 0         ; Start with zero length
-    mov bx, base
-    mov dx, 100        ; nekudat ha-y
+    mov bx, base      ; mispar hazarot
+    mov dx, 100       ; nekudat ha-y
     mov cx, 30        ; nekudat ha-x
     
-    call draw_base 
+call draw_base 
     
- 
-   ; Calculate the y-coordinate for the right line based on the current value of cx
-    mov si, 100                  ; Store the current value of cx in si
-    mov cx, cheight                ; Subtract the base length from cx
-    sub si, cx
-    mov other, si 
     
+    
+    
+   ; Calculate the y-coordinate for the right line 
+    mov si, 100       ; machnis le-si et nekudat ha-y harishona           
+    mov cx, cheight   ; machnis le-cx et cheight             
+    sub si, cx        ; machsir benehem 
+    mov ycord2, si    ; shomer be-ycord2 et nekudat ha-y hachadasha
    
-     
-     
+          
     ; metzayer et habasis
     mov bx, 0         ; Start with zero length
-    mov bx, base
-    mov dx, other        ; nekudat ha-y
+    mov bx, base      ; mispar hazarot
+    mov dx, ycord2    ; nekudat ha-y
     mov cx, 30        ; nekudat ha-x 
     
     
-     call draw_base
-     
-     
-      
-      
-      
+call draw_base
 
- 
 
       
-      
-      
-     mov dx, 100 
-      
-      
-      
-      
-          ; Draw the left line of the triangle
-    mov cx, 30                    ; Set x-coordinate to 30
-    mov bx, 10                ; Set height of triangle
+    mov dx, 100       ; nekudat ha-y 
+    ; Draw the left line of the triangle
+    mov cx, 30        ; Set x-coordinate to 30
+    mov bx, 10        ; Set height of triangle
           
-          
-          
-    call draw_left_line
+                
+call draw_left_line
     
  
-    
-       ; Calculate the x-coordinate for the right line based on the current value of cx
-    mov si, 30                  ; Store the current value of cx in si
-    mov cx, base                ; Subtract the base length from cx
-    add cx, si                  ; Add the base length back to cx
+     
+     
+       ; Calculate the x-coordinate for the right line 
+    mov si, 30         ; Store the current value of x cord in si
+    mov cx, base       ; Store the base in cx
+    add cx, si         ; Add the base length and the original x cord 
 
     ; Draw the right line of the triangle
-    mov dx, 100                  ; Calculate y-coordinate for the right line
+    mov dx, 100              ; Calculate y-coordinate for the right line
     mov bx, 10               ; Set height of triangle 
     
-    call draw_right_line 
+call draw_right_line 
       
       
-      
-      
-      
-      
-      
-      
-      
-      
+
      
-     
-     
-     exit:
+    exit:
 mov ax, 4c00h
 int 21H     
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     
  
+ 
+;The base is equal to 0 
+note1 proc
+   
+    mov ah, 09h
+    lea dx, message3
+    int 21h
+    jmp start    
+ret
+note1 endp     
+;write an error message on the base 
+;return to the beginning of the code in order to type numbers again 
  
  
 
-;note proc
+;The height is equal to 0
+note2 proc
    
- ;   mov ah, 09h
-  ;  lea dx, message3
-   ; int 21h
-    ;jmp start    
-;ret
-;note endp     
- 
- 
+    mov ah, 09h
+    lea dx, message4 
+    int 21h
+    jmp start    
+ret
+note2 endp
+;write an error message on the height
+;return to the beginning of the code in order to type numbers again
+
  
  
 ;bx: line lenght
@@ -245,52 +232,57 @@ int 21H
 draw_base proc
     
 next_pixel:    
-    mov al, 10      ; Blue color
+    mov al, 10      ; green color
     mov ah, 0ch     ; Set pixel color and position
-    int 10h         ; Plot pixel
-
-    ;inc ax          ; Move right one pixel
-    inc cx          ; Increase length by 1 pixel
+    int 10h         ; Plot pixel    
+    inc cx          ; Increase length by 1 pixel - it increases the x-coordinate for the next pixel    
+    dec bx          ; morid et hahazarot
+    cmp bx, 0       ; bodek im siyem
+    jne next_pixel  ;("not equal")
     
-    dec bx
-    cmp bx, 0
-    jne next_pixel
-    
-    ret             
+ret             
 draw_base endp
 ;drawing 
 
 
+  
+  
 
-
-
-
-
-
-
-
+;bx: number of repetitions of the function
+;cx: how many pixels to draw to the right
+;dx: how many pixels to draw up 
 draw_left_line proc
 draw_left_line_lab:
-        add cx, base10r        ; Move right one pixel
-        sub dx, height10u       ; Move up one pixel
-        int 10h      ; Plot pixel                                         
-        dec bx       ; Decrease height by 1 pixel
-        jnz draw_left_line_lab ; Jump if height is not zero
+    add cx, base10r        ; Move right pixeles as the number of base/10 
+    sub dx, height10u      ; Move up one pixeles as the number of height/10
+    int 10h      ; Plot pixel                                         
+    dec bx       ; Decrease et mispar hahazarot
+    jnz draw_left_line_lab  
         
-        ret   
+ret   
 draw_left_line endp
+;drawing
 
+ 
+ 
 
-
+;bx: number of repetitions of the function
+;cx: how many pixels to draw to the right
+;dx: how many pixels to draw up
 draw_right_line proc
 draw_right_line_lab:    
-        sub cx, base10r       ; Move left one pixel 
-        sub dx, height10u       ; Move up one pixel
-        int 10h      ; Plot pixel
-        dec bx       ; Decrease height by 1 pixel
-        jnz draw_right_line_lab ; Jump if height is not zero
+    sub cx, base10r         ; Move left pixeles as the number of base/10 
+    sub dx, height10u       ; Move up one pixeles as the number of height/10
+    int 10h      ; Plot pixel
+    dec bx       ; Decrease et mispar hahazarot
+    jnz draw_right_line_lab 
 
-        ret         
+ret         
 draw_right_line endp
+;drawing
+
+
+
+
 
 end
