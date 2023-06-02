@@ -1,4 +1,4 @@
-.model small ; version 107 
+.model small ; version 108 - final 
 .stack 100h
 .data
 message2 db '                                      _      _         _   ',13,10,  
@@ -17,6 +17,8 @@ message2 db '                                      _      _         _   ',13,10,
     cheight dw ?
     base10r dw ?
     height10u dw ?
+    color dw ?
+    message6 db '                               choose a color - click: 5 for pink, 6 for orange, 7 for white   $'
    
 .code       
     mov ax, @data
@@ -39,6 +41,34 @@ message2 db '                                      _      _         _   ',13,10,
     
 
 start:
+      ;color:
+    
+     ; mevakesh et habasis (Asks for the base)
+    mov ah, 09h      ; Set the function code for printing a string
+    lea dx, message6   ; Load the offset of the message string into DX
+    int 21h           ; Call the interrupt to display the message string
+
+    ; kore et hakelet (Reads the input character)
+    mov ah, 01h      ; Set the function code for reading a character
+    int 21h          ; Call the interrupt to read a character from the keyboard
+    sub al, 30h      ; Subtract 30h to convert the ASCII digit to a numerical value
+    mov bl, al       ; Move the numerical value to BL for further processing
+    mov ah, 00h      ; Clear AH
+    mov al, 1       ; Set AL to 10 for multiplication
+    mul bl           
+    mov color, ax    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     ; mevakesh et habasis (Asks for the base)
     mov ah, 09h      ; Set the function code for printing a string
     lea dx, message   ; Load the offset of the message string into DX
@@ -232,7 +262,7 @@ note2 endp
 draw_base proc
     
 next_pixel:    
-    mov al, 10      ; green color
+    mov ax, color
     mov ah, 0ch     ; Set pixel color and position
     int 10h         ; Plot pixel    
     inc cx          ; Increase length by 1 pixel - it increases the x-coordinate for the next pixel    
